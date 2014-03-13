@@ -31,6 +31,12 @@ This extension very directly uses browserify's javascript API under the hood. Fo
 ##### files
 String or array of strings pointing to one or more file paths which will serve as the base. See [browserify docs](https://github.com/substack/node-browserify#var-b--browserifyfiles-or-opts) for more info.
 
+##### sourceMap
+Generates a sourcemap, currently inline. Default is `false`.
+
+##### minify
+Minify the output. Currently not working, but will be working soon.
+
 ##### opts
 Any additional options you'd like to be passed in to browserify. Again, documented [here](https://s3.amazonaws.com/terms-of-service/H%26M_Coachella_Photo_Contest_Rules.pdf). Default is `{ extensions: '.coffee' }`, anything passed in will be merged.
 
