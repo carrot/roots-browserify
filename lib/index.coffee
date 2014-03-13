@@ -1,6 +1,7 @@
 path       = require 'path'
 fs         = require 'fs'
 W          = require 'when'
+_          = require 'lodash'
 browserify = require 'browserify'
 coffeeify  = require 'coffeeify'
 minifyify  = require('minifyify')
