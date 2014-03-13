@@ -18,8 +18,6 @@ Roots browserify is an alternate javascript pipeline that uses commonjs and [bro
 
   module.exports =
     extensions: [browserify(files: "assets/js/main.coffee", out: 'js/build.js')]
-
-    # everything else...
   ```
 
 ### Usage
@@ -32,7 +30,7 @@ This extension very directly uses browserify's javascript API under the hood. Fo
 String or array of strings pointing to one or more file paths which will serve as the base. See [browserify docs](https://github.com/substack/node-browserify#var-b--browserifyfiles-or-opts) for more info.
 
 ##### sourceMap
-Generates a sourcemap, currently inline. Default is `false`.
+Generates a source map, currently inline. Default is `false`.
 
 ##### minify
 Minify the output. Currently not working, but will be working soon.
