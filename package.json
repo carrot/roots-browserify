@@ -1,0 +1,44 @@
+{
+  "name": "roots-browserify",
+  "version": "0.0.0",
+  "author": "Carrot Creative <dev@carrotcreative.com>",
+  "description": "roots extension enabling the use of browserify",
+  "license": "MIT",
+  "keywords": [
+    "roots-extension",
+    "browserify",
+    "client-side"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/carrot/roots-browserify.git"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "coffee-script": "1.7.x",
+    "lodash": "2.x",
+    "when": "2.x",
+    "minimatch": "0.2.x",
+    "umd": "2.x",
+    "mkdirp": "0.3.x",
+    "browserify": "^3.32.1",
+    "coffeeify": "^0.6.0",
+    "minifyify": "^2.1.0"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*",
+    "glob": "*",
+    "rimraf": "*",
+    "roots": "3.x"
+  },
+  "peerDependencies": {
+    "roots": "3.x"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}
