@@ -30,13 +30,13 @@ This extension very directly uses browserify's javascript API under the hood. Fo
 String or array of strings pointing to one or more file paths which will serve as the base. See [browserify docs](https://github.com/substack/node-browserify#var-b--browserifyfiles-or-opts) for more info.
 
 ##### sourceMap
-Generates a source map, currently inline. Default is `false`.
+Generates an inline sourcemap, external if `minify` is `true`. Default is `false`.
 
 ##### minify
-Minify the output. Currently not working, but will be working soon.
+Minfifies the output. Default is `false`.
 
 ##### opts
-Any additional options you'd like to be passed in to browserify. Again, documented [here](https://s3.amazonaws.com/terms-of-service/H%26M_Coachella_Photo_Contest_Rules.pdf). Default is `{ extensions: '.coffee' }`, anything passed in will be merged.
+Any additional options you'd like to be passed in to browserify. Again, documented [here](https://s3.amazonaws.com/terms-of-service/H%26M_Coachella_Photo_Contest_Rules.pdf). Default is `{ extensions: ['.js', '.json', '.coffee'] }`.
 
 ##### out
 Where you want to output your built js file to in your `public` folder (or whatever you have set `output` to in the roots settings). Default is `js/build.js`

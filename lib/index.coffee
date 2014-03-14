@@ -10,7 +10,7 @@ module.exports = (opts) ->
 
   opts = _.defaults opts,
     files: 'js/main.js'
-    opts: { extensions: '.coffee'}
+    opts: { extensions: ['.js', '.json', '.coffee']}
     minify: false
     sourceMap: false
 
