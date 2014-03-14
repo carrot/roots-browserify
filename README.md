@@ -14,7 +14,7 @@ Roots browserify is an alternate javascript pipeline that uses commonjs and [bro
 - modify your `app.coffee` file to include the extension, as such
 
   ```coffee
-  browserify = require('client-templates')
+  browserify = require('roots-browserify')
 
   module.exports =
     extensions: [browserify(files: "assets/js/main.coffee", out: 'js/build.js')]
