@@ -11,7 +11,7 @@ module.exports = (opts) ->
   opts = _.defaults opts,
     files: 'js/main.js'
     opts: { extensions: '.coffee'}
-    minify: true
+    minify: false
     sourceMap: false
 
   if not opts.out? then throw new Error("you must provide an 'out' path")
@@ -28,12 +28,13 @@ module.exports = (opts) ->
     constructor: (@roots) ->
       @category = 'browserify'
 
-      files = if Array.isArray(files)
-        opts.files.map((f) -> path.join(@roots.root, f))
-      else
-        path.join(@roots.root, opts.files)
+      @b = browserify({ extensions: ['.js', '.json', '.coffee'] })
 
-      @b = browserify(files, { extensions: ['.js', '.json', '.coffee'] })
+      if Array.isArray(opts.files)
+        opts.files.forEach((f) => @b.add(path.join(@roots.root, f)))
+      else
+        @b.add(path.join(@roots.root, opts.files))
+
       @b.transform('coffeeify')
 
     ###*
@@ -69,16 +70,22 @@ module.exports = (opts) ->
       after: (ctx) =>
         deferred = W.defer()
 
-        out = fs.createWriteStream(path.join(@roots.config.output_path(), opts.out))
+        output_path = path.join(@roots.config.output_path(), opts.out)
+        sourcemap_path = output_path.replace(path.extname(output_path),'') + '.map.json'
+        sourcemap_path_relative = sourcemap_path.replace(@roots.config.output_path(), '')
 
-        stream = @b.bundle({ debug: opts.sourceMap })
+        stream = @b.bundle({ debug: opts.minify || opts.sourceMap })
+        map = if opts.sourceMap then sourcemap_path_relative else false
 
-        # if opts.minify then stream.pipe(minifyify())
-        # - unfortunately, minification isn't going to work here yet
-        # - https://github.com/ben-ng/minifyify/issues/27
-        
-        stream.pipe(out)
-          .on('error', deferred.reject)
-          .on('close', deferred.resolve)
+        if opts.minify
+          stream.pipe minifyify { map: map }, (err, src, map) ->
+            if err then return deferred.reject(err)
+            fs.writeFileSync(output_path, src);
+            if opts.sourceMap then fs.writeFileSync(sourcemap_path, map);
+            deferred.resolve()
+        else
+          stream.pipe(fs.createWriteStream(output_path))
+            .on('error', deferred.reject)
+            .on('close', deferred.resolve)
 
         return deferred.promise

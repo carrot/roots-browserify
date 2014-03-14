@@ -13,7 +13,7 @@
     "type": "git",
     "url": "https://github.com/carrot/roots-browserify.git"
   },
-  "main": "index.js",
+  "main": "lib",
   "dependencies": {
     "coffee-script": "1.7.x",
     "lodash": "2.x",
@@ -23,7 +23,7 @@
     "mkdirp": "0.3.x",
     "browserify": "^3.32.1",
     "coffeeify": "^0.6.0",
-    "minifyify": "^2.1.0"
+    "minifyify": "2.3.x"
   },
   "devDependencies": {
     "mocha": "*",

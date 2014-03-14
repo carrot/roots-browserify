@@ -44,8 +44,74 @@ describe 'basic', ->
 
   before (done) ->
     compile_fixture.call(@, 'basic', done)
-    @out = path.join(_path, 'basic/public/build.js')
+    @public = path.join(_path, 'basic/public')
 
-  it 'works with multiple coffee files', ->
+  it 'should compile output', ->
+    build = path.join(@public, 'build.min.js')
+
+    should.file_exist(build)
+    should.contain(build, "var doge = require('./doge');")
+    should.contain(build, "module.exports = 'wow'")
+
+describe 'minify', ->
+
+  before (done) ->
+    compile_fixture.call(@, 'minify', done)
+    @public = path.join(_path, 'minify/public')
+
+  it 'should compile and minify output', ->
+    build = path.join(@public, 'build.min.js')
+
+    should.file_exist(build)
+    should.contain(build, 'var doge=require("./doge");')
+    should.contain(build, 'module.exports="wow"')
+
+describe 'sourcemap', ->
+
+  before (done) ->
+    compile_fixture.call(@, 'sourcemap', done)
+    @public = path.join(_path, 'sourcemap/public')
+
+  it 'should compile and provide sourcemap', ->
+    build = path.join(@public, 'build.min.js')
+
+    should.file_exist(build)
+    should.contain(build, "//# sourceMappingURL=data:application/json;base64")
+    should.contain(build, "var doge = require('./doge');")
+    should.contain(build, "module.exports = 'wow'")
+
+describe 'minify-sourcemap', ->
+
+  before (done) ->
+    compile_fixture.call(@, 'minify-sourcemap', done)
+    @public = path.join(_path, 'minify-sourcemap/public')
+
+  it 'should compile, minify, and provide sourcemap', ->
+    build = path.join(@public, 'build.min.js')
+    map = path.join(@public, 'build.min.map.json')
+
+    should.file_exist(build)
+    should.contain(build, 'var doge=require("./doge");')
+    should.contain(build, 'module.exports="wow"')
+    should.contain(build, '//# sourceMappingURL=/build.min.map.json')
+    should.file_exist(map)
+    should.have_content(map)
+
+describe 'coffeescript', ->
+
+  before (done) ->
+    compile_fixture.call(@, 'coffeescript', done)
+    @out = path.join(_path, 'coffeescript/public/build.js')
+
+  it 'should compile coffeescript files', ->
     should.contain(@out, "doge = require('./doge');")
     should.contain(@out, "module.exports = 'wow';")
+
+# describe 'coffeescript-minify'
+# does not work because of a bug in the minifier
+
+# describe 'coffeescript-sourcemap'
+# does not work because of a bug in the minifier
+
+# describe 'coffeescript-minify-sourcemap'
+# does not work because of a bug in the minifier
