@@ -36,7 +36,7 @@ Generates an inline sourcemap, external if `minify` is `true`. Default is `false
 Minfifies the output. Default is `false`.
 
 ##### opts
-Any additional options you'd like to be passed in to browserify. Again, documented [here](https://s3.amazonaws.com/terms-of-service/H%26M_Coachella_Photo_Contest_Rules.pdf). Default is `{ extensions: ['.js', '.json', '.coffee'] }`.
+Any additional options you'd like to be passed in to browserify. Again, documented [here](https://github.com/substack/node-browserify#var-b--browserifyfiles-or-opts). Default is `{ extensions: ['.js', '.json', '.coffee'] }`.
 
 ##### out
 Where you want to output your built js file to in your `public` folder (or whatever you have set `output` to in the roots settings). Default is `js/build.js`
