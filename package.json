@@ -17,8 +17,6 @@
   "dependencies": {
     "coffee-script": "1.7.x",
     "lodash": "2.x",
-    "when": "2.x",
-    "minimatch": "0.2.x",
     "umd": "2.x",
     "browserify": "3.x",
     "coffeeify": "0.6.x",
