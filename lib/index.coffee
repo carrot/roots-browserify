@@ -1,5 +1,6 @@
 path       = require 'path'
 fs         = require 'fs'
+W          = require 'when'
 _          = require 'lodash'
 browserify = require 'browserify'
 exorcist   = require 'exorcist'

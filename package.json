@@ -17,6 +17,7 @@
   "dependencies": {
     "coffee-script": "1.7.x",
     "lodash": "2.x",
+    "when": "3.x",
     "umd": "2.x",
     "browserify": "3.x",
     "coffeeify": "0.6.x",
