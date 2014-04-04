@@ -3,8 +3,7 @@ fs         = require 'fs'
 W          = require 'when'
 _          = require 'lodash'
 browserify = require 'browserify'
-coffeeify  = require 'coffeeify'
-minifyify  = require('minifyify')
+exorcist   = require 'exorcist'
 
 module.exports = (opts) ->
 
@@ -15,6 +14,9 @@ module.exports = (opts) ->
     sourceMap: false
 
   if not opts.out? then throw new Error("you must provide an 'out' path")
+
+  opts.out = path.normalize(opts.out)
+  opts.files = Array::concat(opts.files)
 
   class Browserify
 
@@ -27,28 +29,41 @@ module.exports = (opts) ->
 
     constructor: (@roots) ->
       @category = 'browserify'
+      @deps = []
 
-      @b = browserify({ extensions: ['.js', '.json', '.coffee'] })
-
-      if Array.isArray(opts.files)
-        opts.files.forEach((f) => @b.add(path.join(@roots.root, f)))
-      else
-        @b.add(path.join(@roots.root, opts.files))
+      @files = opts.files.map((f) => path.join(@roots.root, f))
+      @b = browserify(entries: @files, extensions: ['.js', '.json', '.coffee'])
 
       @b.transform('coffeeify')
+      if opts.minify then @b.transform({ global: true }, 'uglifyify')
 
     ###*
-     * Selects all js and/or coffee files for processing and extracts them
-     * from the pipeline. It *should* be using browserify.deps() to figure
-     * out only the required files, but that seems to be bugged out at the
-     * moment, so for now it pulls all js files.
+     * Gets the dependency graph of required files so we can ignore them
+     * from the compile process.
+     * 
+     * @return {Promise} promise for finishing getting the deps
+    ###
+
+    setup: ->
+      deferred = W.defer()
+
+      @b.deps()
+        .on 'data', (res) =>
+          @deps = @deps.concat(Object.keys(res.deps).map((key) => res.deps[key]))
+        .on('end', deferred.resolve)
+
+      return deferred.promise
+
+    ###*
+     * If the file was passed directly into browserify or it is a dependency
+     * of one of the main files, extract from the roots pipeline because
+     * browserify is going to handle the compilation.
     ###
 
     fs: ->
       extract: true
-      detect: (f) ->
-        ext = path.extname(f.relative)
-        ext is '.coffee' or ext is '.js'
+      detect: (f) =>
+        _.contains(@files, f.path) or _.contains(@deps, f.path)
 
     ###*
      * Zero out the contents so nothing is compiled and don't write the file.
@@ -70,22 +85,15 @@ module.exports = (opts) ->
       after: (ctx) =>
         deferred = W.defer()
 
-        output_path = path.join(@roots.config.output_path(), opts.out)
-        sourcemap_path = output_path.replace(path.extname(output_path),'') + '.map.json'
-        sourcemap_path_relative = sourcemap_path.replace(@roots.config.output_path(), '')
+        out_path = path.join(@roots.config.output_path(), opts.out)
+        stream = @b.bundle({ debug: opts.sourceMap })
 
-        stream = @b.bundle({ debug: opts.minify || opts.sourceMap })
-        map = if opts.sourceMap then sourcemap_path_relative else false
+        if opts.sourceMap
+          map_path = out_path.replace(path.extname(out_path),'') + '.js.map'
+          stream = stream.pipe(exorcist(map_path))
 
-        if opts.minify
-          stream.pipe minifyify { map: map }, (err, src, map) ->
-            if err then return deferred.reject(err)
-            fs.writeFileSync(output_path, src);
-            if opts.sourceMap then fs.writeFileSync(sourcemap_path, map);
-            deferred.resolve()
-        else
-          stream.pipe(fs.createWriteStream(output_path))
-            .on('error', deferred.reject)
-            .on('close', deferred.resolve)
+        stream.pipe(fs.createWriteStream(out_path))
+          .on('error', deferred.reject)
+          .on('close', deferred.resolve)
 
         return deferred.promise

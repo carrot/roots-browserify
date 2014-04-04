@@ -20,10 +20,11 @@
     "when": "2.x",
     "minimatch": "0.2.x",
     "umd": "2.x",
-    "mkdirp": "0.3.x",
-    "browserify": "^3.32.1",
-    "coffeeify": "^0.6.0",
-    "minifyify": "2.3.x"
+    "browserify": "3.x",
+    "coffeeify": "0.6.x",
+    "roots-util": "0.0.4",
+    "uglifyify": "2.1.x",
+    "exorcist": "0.1.5"
   },
   "devDependencies": {
     "mocha": "*",
