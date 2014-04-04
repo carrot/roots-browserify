@@ -7,6 +7,8 @@ Roots browserify is an alternate javascript pipeline that uses commonjs and [bro
 
 > **Note:** This project is in early development, and versioning is a little different. [Read this](http://markup.im/#q4_cRZ1Q) for more details.
 
+> **Note:** At the moment, due to an issue with browserify's dependency resolution, if you are using coffeescript it will still compile your files normally in addition to bundling them.
+
 ### Installation
 
 - make sure you are in your roots project directory
