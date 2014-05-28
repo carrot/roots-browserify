@@ -20,6 +20,11 @@ after ->
 
 # tests
 
+describe 'errors', ->
+
+  it 'should error if not given an out path', ->
+    (-> new Roots(path.join(_path, 'errors'))).should.throw("you must provide an 'out' path")
+
 describe 'basic', ->
 
   before (done) -> compile_fixture.call(@, 'basic', -> done())
