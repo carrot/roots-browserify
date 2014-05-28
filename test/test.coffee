@@ -22,7 +22,7 @@ after ->
 
 describe 'basic', ->
 
-  before (done) -> compile_fixture.call(@, 'basic', done)
+  before (done) -> compile_fixture.call(@, 'basic', -> done())
 
   it 'should compile output', ->
     build = path.join(@public, 'build.min.js')
@@ -33,7 +33,7 @@ describe 'basic', ->
 
 describe 'minify', ->
 
-  before (done) -> compile_fixture.call(@, 'minify', done)
+  before (done) -> compile_fixture.call(@, 'minify', -> done())
 
   it 'should compile and minify output', ->
     build = path.join(@public, 'build.min.js')
@@ -44,7 +44,7 @@ describe 'minify', ->
 
 describe 'sourcemap', ->
 
-  before (done) -> compile_fixture.call(@, 'sourcemap', done)
+  before (done) -> compile_fixture.call(@, 'sourcemap', -> done())
 
   it 'should compile and provide sourcemap', ->
     build = path.join(@public, 'build.min.js')
@@ -58,7 +58,7 @@ describe 'sourcemap', ->
 
 describe 'minify-sourcemap', ->
 
-  before (done) -> compile_fixture.call(@, 'minify-sourcemap', done)
+  before (done) -> compile_fixture.call(@, 'minify-sourcemap', -> done())
 
   it 'should compile, minify, and provide sourcemap', ->
     build = path.join(@public, 'build.min.js')
@@ -73,7 +73,7 @@ describe 'minify-sourcemap', ->
 
 describe 'coffeescript', ->
 
-  before (done) -> compile_fixture.call(@, 'coffeescript', done)
+  before (done) -> compile_fixture.call(@, 'coffeescript', -> done())
 
   it 'should compile coffeescript files', ->
     out = path.join(@public, 'build.js')
@@ -83,7 +83,7 @@ describe 'coffeescript', ->
 
 describe 'coffeescript-minify', ->
 
-  before (done) -> compile_fixture.call(@, 'coffee-minify', done)
+  before (done) -> compile_fixture.call(@, 'coffee-minify', -> done())
 
   it 'should compile and minify output', ->
     build = path.join(@public, 'build.min.js')
@@ -94,7 +94,7 @@ describe 'coffeescript-minify', ->
 
 describe 'coffeescript-sourcemap', ->
 
-  before (done) -> compile_fixture.call(@, 'coffee-sourcemap', done)
+  before (done) -> compile_fixture.call(@, 'coffee-sourcemap', -> done())
 
   it 'should compile and provide sourcemap', ->
     build = path.join(@public, 'build.js')
@@ -108,7 +108,7 @@ describe 'coffeescript-sourcemap', ->
 
 describe 'coffeescript-minify-sourcemap', ->
 
-  before (done) -> compile_fixture.call(@, 'coffee-minify-sourcemap', done)
+  before (done) -> compile_fixture.call(@, 'coffee-minify-sourcemap', -> done())
 
   it 'should compile, minify, and provide sourcemap', ->
     build = path.join(@public, 'build.min.js')
@@ -120,3 +120,12 @@ describe 'coffeescript-minify-sourcemap', ->
     h.file.contains(build, '//# sourceMappingURL=build.min.js.map').should.be.ok
     h.file.exists(map).should.be.ok
     h.file.has_content(map).should.be.ok
+
+describe 'coffee-js-mix', ->
+
+  before (done) -> compile_fixture.call(@, 'coffee-js-mix', -> done())
+
+  it 'should require js files from coffee files', ->
+    out = path.join(@public, 'build.js')
+    h.file.contains(out, "doge = require('./doge');").should.be.ok
+    h.file.contains(out, "module.exports = 'wow';").should.be.ok
