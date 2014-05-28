@@ -1,7 +1,7 @@
 Roots Browserify
 ================
 
-[![npm](https://badge.fury.io/js/roots-browserify.png)](http://badge.fury.io/js/roots-browserify) [![tests](https://travis-ci.org/carrot/roots-browserify.png?branch=master)](https://travis-ci.org/carrot/roots-browserify) [![dependencies](https://david-dm.org/carrot/roots-browserify.png?theme=shields.io)](https://david-dm.org/carrot/roots-browserify)
+[![npm](http://img.shields.io/npm/v/roots-browserify.svg?style=flat)](https://badge.fury.io/js/roots-browserify) [![tests](http://img.shields.io/travis/carrot/roots-browserify/master.svg?style=flat)](https://travis-ci.org/carrot/roots-browserify) [![dependencies](http://img.shields.io/gemnasium/carrot/roots-browserify.svg?style=flat)](https://gemnasium.com/carrot/roots-browserify)
 
 Roots browserify is an alternate javascript pipeline that uses commonjs and [browserify](http://browserify.org) to build and concatenate scripts.
 
