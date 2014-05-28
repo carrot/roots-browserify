@@ -23,7 +23,7 @@ module.exports = (opts) ->
     ###*
      * Sets up the custom category, maps all paths to the project root,
      * and initializes browserify and the coffee transform.
-     * 
+     *
      * @param  {Function} @roots - Roots class instance
     ###
 
@@ -40,7 +40,7 @@ module.exports = (opts) ->
     ###*
      * Gets the dependency graph of required files so we can ignore them
      * from the compile process.
-     * 
+     *
      * @return {Promise} promise for finishing getting the deps
     ###
 
@@ -49,7 +49,7 @@ module.exports = (opts) ->
 
       @b.deps()
         .on 'data', (res) =>
-          @deps = @deps.concat(Object.keys(res.deps).map((key) => res.deps[key]))
+          @deps = @deps.concat(Object.keys(res.deps).map((key)->res.deps[key]))
         .on('end', deferred.resolve)
 
       return deferred.promise
