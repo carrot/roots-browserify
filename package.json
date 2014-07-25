@@ -15,25 +15,25 @@
   },
   "main": "lib",
   "dependencies": {
-    "coffee-script": "1.7.x",
-    "lodash": "2.x",
-    "when": "3.x",
     "browserify": "4.x",
+    "coffee-script": "1.7.x",
     "coffeeify": "0.6.x",
+    "exorcist": "0.1.6",
+    "lodash": "2.x",
     "roots-util": "0.0.4",
-    "uglifyify": "2.1.x",
-    "exorcist": "0.1.6"
+    "uglifyify": "2.4.x",
+    "when": "3.x"
   },
   "devDependencies": {
-    "mocha": "*",
-    "should": "*",
-    "glob": "*",
-    "rimraf": "*",
+    "coffeelint": "1.x",
+    "coveralls": "2.x",
+    "glob": "4.x",
+    "istanbul": "0.3.x",
+    "mocha": "1.x",
+    "mocha-lcov-reporter": "0.0.1",
+    "rimraf": "2.x",
     "roots": "3.x",
-    "coffeelint": "*",
-    "istanbul": "*",
-    "mocha-lcov-reporter": "*",
-    "coveralls": "*"
+    "should": "4.x"
   },
   "peerDependencies": {
     "roots": "3.x"
