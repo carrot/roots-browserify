@@ -41,6 +41,9 @@ Any additional options you'd like to be passed in to browserify. Again, document
 ##### out
 Where you want to output your built js file to in your `public` folder (or whatever you have set `output` to in the roots settings). Default is `js/build.js`
 
+##### transforms
+If you'd like to add additional custom transforms, you can do it through this option. Pass either a transform function or an array of functions and they will be included in the pipeline. Default is `coffeeify` (add that string to your array if you want to keep coffeeify as well, otherwise it will be overridden).
+
 ### License & Contributing
 
 - Details on the license [can be found here](LICENSE.md)

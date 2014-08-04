@@ -36,6 +36,17 @@ describe 'basic', ->
     h.file.contains(build, "var doge = require('./doge');").should.be.ok
     h.file.contains(build, "module.exports = 'wow'").should.be.ok
 
+describe 'transforms', ->
+
+  before (done) -> compile_fixture.call(@, 'transforms', -> done())
+
+  it 'should accept additional transforms', ->
+    build = path.join(@public, 'build.min.js')
+
+    h.file.exists(build).should.be.ok
+    h.file.contains(build, "var doge = require('./doge.yaml');").should.be.ok
+    h.file.contains(build, '{"wow":{"such":"doge"}}').should.be.ok
+
 describe 'minify', ->
 
   before (done) -> compile_fixture.call(@, 'minify', -> done())

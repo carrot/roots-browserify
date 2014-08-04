@@ -12,11 +12,13 @@ module.exports = (opts) ->
     opts: { extensions: ['.js', '.json', '.coffee']}
     minify: false
     sourceMap: false
+    transforms: ['coffeeify']
 
   if not opts.out? then throw new Error("you must provide an 'out' path")
 
   opts.out = path.normalize(opts.out)
   opts.files = Array::concat(opts.files)
+  opts.transforms = Array::concat(opts.transforms)
 
   class Browserify
 
@@ -34,7 +36,7 @@ module.exports = (opts) ->
       @files = opts.files.map((f) => path.join(@roots.root, f))
       @b = browserify(entries: @files, extensions: ['.js', '.json', '.coffee'])
 
-      @b.transform('coffeeify')
+      @b.transform(t) for t in opts.transforms
       if opts.minify then @b.transform({ global: true }, 'uglifyify')
 
     ###*
