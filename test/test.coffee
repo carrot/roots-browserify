@@ -145,3 +145,11 @@ describe 'coffee-js-mix', ->
     out = path.join(@public, 'build.js')
     h.file.contains(out, "doge = require('./doge');").should.be.ok
     h.file.contains(out, "module.exports = 'wow';").should.be.ok
+
+describe 'ignores', ->
+
+  before (done) -> compile_fixture.call(@, 'ignores', -> done())
+
+  it 'should ignore all required files', ->
+    build = path.join(@public, 'doge.js')
+    h.file.exists(build).should.not.be.ok
