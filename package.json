@@ -20,7 +20,7 @@
     "coffeeify": "0.6.x",
     "exorcist": "0.1.6",
     "lodash": "2.x",
-    "roots-util": "0.0.4",
+    "roots-util": "0.1.x",
     "uglifyify": "2.4.x",
     "when": "3.x"
   },

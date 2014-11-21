@@ -10,7 +10,7 @@ h         = new RootsUtil.Helpers(base: _path)
 
 compile_fixture = (fixture_name, done) ->
   @public = path.join(fixture_name, 'public')
-  h.project.compile(Roots, fixture_name, done)
+  h.project.compile(Roots, fixture_name).done(done)
 
 before (done) ->
   h.project.install_dependencies('*', done)
