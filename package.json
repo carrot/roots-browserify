@@ -16,13 +16,13 @@
   "main": "lib",
   "dependencies": {
     "browserify": "6.x",
-    "coffee-script": "1.7.x",
-    "coffeeify": "0.6.x",
+    "coffee-script": "1.8.x",
+    "coffeeify": "1.x",
     "exorcist": "0.1.6",
     "lodash": "2.x",
     "roots-util": "0.1.x",
-    "through2": "0.6.x",
-    "uglifyify": "2.4.x",
+    "through2": "1.x",
+    "uglifyify": "2.x",
     "when": "3.x"
   },
   "devDependencies": {
