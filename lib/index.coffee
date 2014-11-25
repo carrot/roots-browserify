@@ -4,6 +4,8 @@ W          = require 'when'
 _          = require 'lodash'
 browserify = require 'browserify'
 exorcist   = require 'exorcist'
+through    = require 'through2'
+Nodefn     = require 'when/node'
 
 module.exports = (opts) ->
 
@@ -34,7 +36,11 @@ module.exports = (opts) ->
       @deps = []
 
       @files = opts.files.map((f) => path.join(@roots.root, f))
-      @b = browserify(entries: @files, extensions: ['.js', '.json', '.coffee'])
+      @b = browserify(
+        entries: @files
+        extensions: ['.js', '.json', '.coffee']
+        debug: opts.sourceMap
+      )
 
       @b.transform(t) for t in opts.transforms
       if opts.minify then @b.transform({ global: true }, 'uglifyify')
@@ -49,10 +55,12 @@ module.exports = (opts) ->
     setup: ->
       deferred = W.defer()
 
-      @b.deps()
-        .on 'data', (res) =>
-          @deps = @deps.concat(Object.keys(res.deps).map((key)->res.deps[key]))
-        .on('end', deferred.resolve)
+      @b.pipeline.get('deps').push through.obj(
+        (row, enc, next) => @deps = @deps.concat(row.file); next()
+        () -> return deferred.resolve()
+      )
+
+      @b.bundle()
 
       return deferred.promise
 
@@ -88,14 +96,17 @@ module.exports = (opts) ->
         deferred = W.defer()
 
         out_path = path.join(@roots.config.output_path(), opts.out)
-        stream = @b.bundle({ debug: opts.sourceMap })
+        stream = @b.bundle()
 
         if opts.sourceMap
           map_path = out_path.replace(path.extname(out_path),'') + '.js.map'
           stream = stream.pipe(exorcist(map_path))
 
-        stream.pipe(fs.createWriteStream(out_path))
-          .on('error', deferred.reject)
-          .on('close', deferred.resolve)
+        writer = fs.createWriteStream(out_path)
+
+        stream.pipe(writer)
+        stream.on('error', deferred.reject)
+        writer.on('error', deferred.reject)
+        writer.on('finish', deferred.resolve)
 
         return deferred.promise
