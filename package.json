@@ -15,7 +15,7 @@
   },
   "main": "lib",
   "dependencies": {
-    "browserify": "6.x",
+    "browserify": "8.x",
     "coffee-script": "1.8.x",
     "coffeeify": "1.x",
     "exorcist": "0.1.6",
