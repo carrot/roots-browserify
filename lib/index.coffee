@@ -6,6 +6,7 @@ browserify = require 'browserify'
 exorcist   = require 'exorcist'
 through    = require 'through2'
 Nodefn     = require 'when/node'
+uglifyify  = require 'uglifyify'
 
 module.exports = (opts) ->
 
@@ -43,7 +44,7 @@ module.exports = (opts) ->
       )
 
       @b.transform(t) for t in opts.transforms
-      if opts.minify then @b.transform({ global: true }, 'uglifyify')
+      if opts.minify then @b.transform(uglifyify, { global: true })
 
     ###*
      * Gets the dependency graph of required files so we can ignore them
