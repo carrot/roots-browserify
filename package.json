@@ -1,6 +1,6 @@
 {
   "name": "roots-browserify",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "Carrot Creative <dev@carrotcreative.com>",
   "description": "roots extension enabling the use of browserify",
   "license": "MIT",
