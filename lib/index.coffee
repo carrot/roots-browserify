@@ -7,6 +7,7 @@ exorcist   = require 'exorcist'
 through    = require 'through2'
 Nodefn     = require 'when/node'
 uglifyify  = require 'uglifyify'
+coffeeify  = require 'coffeeify'
 
 module.exports = (opts) ->
 
@@ -15,7 +16,7 @@ module.exports = (opts) ->
     opts: { extensions: ['.js', '.json', '.coffee']}
     minify: false
     sourceMap: false
-    transforms: ['coffeeify']
+    transforms: [coffeeify]
 
   if not opts.out? then throw new Error("you must provide an 'out' path")
 
