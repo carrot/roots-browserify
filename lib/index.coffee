@@ -8,6 +8,7 @@ through    = require 'through2'
 Nodefn     = require 'when/node'
 uglifyify  = require 'uglifyify'
 coffeeify  = require 'coffeeify'
+mold       = require 'mold-source-map'
 
 module.exports = (opts) ->
 
@@ -98,11 +99,19 @@ module.exports = (opts) ->
         deferred = W.defer()
 
         out_path = path.join(@roots.config.output_path(), opts.out)
-        stream = @b.bundle()
 
+        stream = @b.bundle()
         if opts.sourceMap
           map_path = out_path.replace(path.extname(out_path),'') + '.js.map'
-          stream = stream.pipe(exorcist(map_path))
+
+          ###
+           * Convert output paths to be relative
+           * to roots project instead of absolute paths
+           * https://github.com/substack/node-browserify/issues/663
+          ###
+          stream = stream
+          .pipe(mold.transformSourcesRelativeTo(@roots.root || ''))
+          .pipe(exorcist(map_path))
 
         writer = fs.createWriteStream(out_path)
 
