@@ -72,6 +72,13 @@ describe 'sourcemap', ->
     h.file.contains(build, "var doge = require('./doge');").should.be.ok
     h.file.contains(build, "module.exports = 'wow'").should.be.ok
 
+describe 'relative sourcemaps', ->
+  before (done) -> compile_fixture.call(@, 'sourcemap', -> done())
+
+  it 'should output relative sourcemap paths', ->
+    map = path.join(@public, 'build.min.js.map')
+    h.file.contains(map, "\"doge.js\"").should.be.ok
+
 describe 'minify-sourcemap', ->
 
   before (done) -> compile_fixture.call(@, 'minify-sourcemap', -> done())

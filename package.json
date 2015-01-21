@@ -20,6 +20,7 @@
     "coffeeify": "1.x",
     "exorcist": "0.1.6",
     "lodash": "2.x",
+    "mold-source-map": "0.3.0",
     "roots-util": "0.1.x",
     "through2": "1.x",
     "uglifyify": "2.x",
