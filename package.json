@@ -24,6 +24,7 @@
     "roots-util": "0.1.x",
     "through2": "1.x",
     "uglifyify": "2.x",
+    "watchify": "^3.2.3",
     "when": "3.x"
   },
   "devDependencies": {

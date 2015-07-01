@@ -9,6 +9,7 @@ Nodefn     = require 'when/node'
 uglifyify  = require 'uglifyify'
 coffeeify  = require 'coffeeify'
 mold       = require 'mold-source-map'
+watchify   = require 'watchify'
 
 module.exports = (opts) ->
 
@@ -24,6 +25,7 @@ module.exports = (opts) ->
   opts.out = path.normalize(opts.out)
   opts.files = Array::concat(opts.files)
   opts.transforms = Array::concat(opts.transforms)
+  _b = null
 
   class Browserify
 
@@ -39,11 +41,17 @@ module.exports = (opts) ->
       @deps = []
 
       @files = opts.files.map((f) => path.join(@roots.root, f))
-      @b = browserify(
+
+      if (@b = _b) then return
+
+      @b = (_b = watchify(browserify(
         entries: @files
         extensions: ['.js', '.json', '.coffee']
         debug: opts.sourceMap
-      )
+        cache: {}
+        packageCache: {}
+        ignoreWatch: true
+      )))
 
       @b.transform(t) for t in opts.transforms
       if opts.minify then @b.transform(uglifyify, { global: true })
