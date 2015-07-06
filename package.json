@@ -1,19 +1,14 @@
 {
   "name": "roots-browserify",
+  "description": "roots extension enabling the use of browserify",
   "version": "0.3.2",
   "author": "Carrot Creative <dev@carrotcreative.com>",
-  "description": "roots extension enabling the use of browserify",
-  "license": "MIT",
-  "keywords": [
-    "roots-extension",
-    "browserify",
-    "client-side"
+  "contributors": [
+    {
+      "name": "Kyle MacDonald",
+      "email": "kyle@carrotcreative.com"
+    }
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/carrot/roots-browserify.git"
-  },
-  "main": "lib",
   "dependencies": {
     "browserify": "8.x",
     "coffee-script": "1.8.x",
@@ -39,13 +34,24 @@
     "roots": "3.0.0-rc.10",
     "should": "4.x"
   },
-  "scripts": {
-    "test": "npm run lint && mocha",
-    "lint": "find lib/ -name '*.coffee' | xargs coffeelint",
-    "coverage": "make build; istanbul cover _mocha --report html -- -R spec && open coverage/index.html && make unbuild",
-    "coveralls": "make build; istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage; make unbuild"
-  },
   "engines": {
     "node": ">=0.10.0"
+  },
+  "keywords": [
+    "browserify",
+    "client-side",
+    "roots-extension"
+  ],
+  "license": "MIT",
+  "main": "lib",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/carrot/roots-browserify.git"
+  },
+  "scripts": {
+    "coverage": "make build; istanbul cover _mocha --report html -- -R spec && open coverage/index.html && make unbuild",
+    "coveralls": "make build; istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage; make unbuild",
+    "lint": "find lib/ -name '*.coffee' | xargs coffeelint",
+    "test": "npm run lint && mocha"
   }
 }
