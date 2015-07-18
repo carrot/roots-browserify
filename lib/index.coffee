@@ -38,6 +38,7 @@ module.exports = (opts) ->
       @category = 'browserify'
       @cache = {}
       @pkg_cache = {}
+      @changing_deps = {}
 
       @files = opts.files.map((f) => path.join(@roots.root, f))
 
@@ -91,7 +92,9 @@ module.exports = (opts) ->
     ###
 
     compile_hooks: ->
-      before_file: (ctx) -> ctx.content = ''
+      before_file: (ctx) ->
+        ctx.content = ''
+        if @file_changed then invalidate.call(@, @file_changed)
       write: -> false
 
     ###*
@@ -128,3 +131,16 @@ module.exports = (opts) ->
         writer.on('finish', deferred.resolve)
 
         return deferred.promise
+
+    ###*
+     * Given a file, invalidates this file and its dependants in the cache
+     * @private
+     * @param  {String} file - filename
+    ###
+
+    invalidate = (file) ->
+      delete @cache[file]
+      delete @pkg_cache[file]
+
+      @changing_deps[file] = true
+      @b.emit('update', Object.keys(@changing_deps))
