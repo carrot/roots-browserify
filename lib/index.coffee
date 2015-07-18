@@ -36,7 +36,6 @@ module.exports = (opts) ->
 
     constructor: (@roots) ->
       @category = 'browserify'
-      @deps = []
       @cache = {}
       @pkg_cache = {}
 
@@ -67,7 +66,6 @@ module.exports = (opts) ->
         @b.pipeline.get('deps').push through.obj (row, enc, next) =>
           file = if row.expose then b._expose[row.id] else row.file
 
-          @deps = @deps.concat(row.file)
           @cache[file] =
             source: row.source
             deps: _.extend({}, row.deps)
@@ -85,7 +83,7 @@ module.exports = (opts) ->
     fs: ->
       extract: true
       detect: (f) =>
-        _.contains(@files, f.path) or _.contains(@deps, f.path)
+        _.contains(@files, f.path) or _.contains(Object.keys(@cache), f.path)
 
     ###*
      * Zero out the contents so nothing is compiled and don't write the file.
