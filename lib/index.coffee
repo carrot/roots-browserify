@@ -5,11 +5,9 @@ _          = require 'lodash'
 browserify = require 'browserify'
 exorcist   = require 'exorcist'
 through    = require 'through2'
-Nodefn     = require 'when/node'
 uglifyify  = require 'uglifyify'
 coffeeify  = require 'coffeeify'
 mold       = require 'mold-source-map'
-watchify   = require 'watchify'
 
 module.exports = (opts) ->
 
@@ -39,19 +37,20 @@ module.exports = (opts) ->
     constructor: (@roots) ->
       @category = 'browserify'
       @deps = []
+      @cache = {}
+      @pkg_cache = {}
 
       @files = opts.files.map((f) => path.join(@roots.root, f))
 
-      if (@b = _b) then return
-
-      @b = (_b = watchify(browserify(
+      @b = browserify
         entries: @files
         extensions: ['.js', '.json', '.coffee']
         debug: opts.sourceMap
-        cache: {}
-        packageCache: {}
-        ignoreWatch: true
-      )))
+        cache: @cache
+        packageCache: @pkg_cache
+
+      @b.on 'package', (pkg) =>
+        @pkg_cache[path.join(pkg.__dirname, 'package.json')] = pkg
 
       @b.transform(t) for t in opts.transforms
       if opts.minify then @b.transform(uglifyify, { global: true })
@@ -64,16 +63,18 @@ module.exports = (opts) ->
     ###
 
     setup: ->
-      deferred = W.defer()
+      W.promise (resolve, reject) =>
+        @b.pipeline.get('deps').push through.obj (row, enc, next) =>
+          file = if row.expose then b._expose[row.id] else row.file
 
-      @b.pipeline.get('deps').push through.obj(
-        (row, enc, next) => @deps = @deps.concat(row.file); next()
-        () -> return deferred.resolve()
-      )
+          @deps = @deps.concat(row.file)
+          @cache[file] =
+            source: row.source
+            deps: _.extend({}, row.deps)
 
-      @b.bundle()
+          next(); resolve()
 
-      return deferred.promise
+        @b.bundle()
 
     ###*
      * If the file was passed directly into browserify or it is a dependency
