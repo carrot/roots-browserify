@@ -92,9 +92,10 @@ module.exports = (opts) ->
     ###
 
     compile_hooks: ->
-      before_file: (ctx) ->
+      before_file: (ctx) =>
         ctx.content = ''
-        if @file_changed then invalidate.call(@, @file_changed)
+        changed = ctx.roots.file_changed
+        if changed then invalidate.call(@, changed)
       write: -> false
 
     ###*
@@ -133,12 +134,14 @@ module.exports = (opts) ->
         return deferred.promise
 
     ###*
-     * Given a file, invalidates this file and its dependants in the cache
+     * Given a file, invalidates this file and its dependants in the cache.
+     *
      * @private
      * @param  {String} file - filename
     ###
 
     invalidate = (file) ->
+      console.log 'invalidating cache'
       delete @cache[file]
       delete @pkg_cache[file]
 
