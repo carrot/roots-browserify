@@ -92,10 +92,7 @@ module.exports = (opts) ->
     ###
 
     compile_hooks: ->
-      before_file: (ctx) =>
-        ctx.content = ''
-        changed = ctx.roots.file_changed
-        if changed then invalidate.call(@, changed)
+      before_file: (ctx) => ctx.content = ''
       write: -> false
 
     ###*
@@ -110,6 +107,9 @@ module.exports = (opts) ->
         deferred = W.defer()
 
         out_path = path.join(@roots.config.output_path(), opts.out)
+
+        changed = ctx.roots.file_changed
+        if changed then invalidate.call(@, changed)
 
         stream = @b.bundle()
         if opts.sourceMap
@@ -141,7 +141,7 @@ module.exports = (opts) ->
     ###
 
     invalidate = (file) ->
-      console.log 'invalidating cache'
+      console.log 'cache invalidate: ' + file
       delete @cache[file]
       delete @pkg_cache[file]
 
