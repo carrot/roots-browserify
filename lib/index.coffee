@@ -111,7 +111,9 @@ module.exports = (opts) ->
         changed = ctx.roots.file_changed
         if changed then invalidate.call(@, changed)
 
+        console.time('bundle')
         stream = @b.bundle()
+
         if opts.sourceMap
           map_path = out_path.replace(path.extname(out_path),'') + '.js.map'
 
@@ -129,7 +131,7 @@ module.exports = (opts) ->
         stream.pipe(writer)
         stream.on('error', deferred.reject)
         writer.on('error', deferred.reject)
-        writer.on('finish', deferred.resolve)
+        writer.on('finish', -> console.timeEnd('bundle'); deferred.resolve())
 
         return deferred.promise
 
@@ -141,7 +143,6 @@ module.exports = (opts) ->
     ###
 
     invalidate = (file) ->
-      console.log 'cache invalidate: ' + file
       delete @cache[file]
       delete @pkg_cache[file]
 
