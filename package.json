@@ -19,11 +19,11 @@
     "roots-util": "0.1.x",
     "through2": "1.x",
     "uglifyify": "2.x",
-    "watchify": "^3.2.3",
+    "watchify": "3.x",
     "when": "3.x"
   },
   "devDependencies": {
-    "browserify-data": "^0.2.0",
+    "browserify-data": "0.2.x",
     "coffeelint": "1.x",
     "coveralls": "2.x",
     "glob": "4.x",
@@ -31,7 +31,7 @@
     "mocha": "2.x",
     "mocha-lcov-reporter": "0.0.1",
     "rimraf": "2.x",
-    "roots": "3.0.0-rc.10",
+    "roots": "3.x",
     "should": "4.x"
   },
   "engines": {

@@ -160,3 +160,27 @@ describe 'ignores', ->
   it 'should ignore all required files', ->
     build = path.join(@public, 'doge.js')
     h.file.exists(build).should.not.be.ok
+
+describe 'cacheing in watch mode', ->
+
+  before (done) ->
+    count = null
+    watcher = null
+    @project = new Roots(path.join(_path, 'basic'))
+
+    @project
+      .on('error', done)
+      .on 'done', ->
+        if ++count is 1 then return
+        watcher.close()
+        done()
+
+    @project.watch().then (res) -> watcher = res
+
+    setTimeout =>
+      p = path.join(_path, 'basic/index.js')
+      fs.appendFileSync(p, ' ')
+      fs.writeFileSync(p, fs.readFileSync(p, 'utf8').trim())
+    , 3000
+
+  it 'invalidates the cache when a file changes'

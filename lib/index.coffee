@@ -5,11 +5,9 @@ _          = require 'lodash'
 browserify = require 'browserify'
 exorcist   = require 'exorcist'
 through    = require 'through2'
-Nodefn     = require 'when/node'
 uglifyify  = require 'uglifyify'
 coffeeify  = require 'coffeeify'
 mold       = require 'mold-source-map'
-watchify   = require 'watchify'
 
 module.exports = (opts) ->
 
@@ -38,20 +36,21 @@ module.exports = (opts) ->
 
     constructor: (@roots) ->
       @category = 'browserify'
-      @deps = []
+      @cache = {}
+      @pkg_cache = {}
+      @changing_deps = {}
 
       @files = opts.files.map((f) => path.join(@roots.root, f))
 
-      if (@b = _b) then return
-
-      @b = (_b = watchify(browserify(
+      @b = browserify
         entries: @files
         extensions: ['.js', '.json', '.coffee']
         debug: opts.sourceMap
-        cache: {}
-        packageCache: {}
-        ignoreWatch: true
-      )))
+        cache: @cache
+        packageCache: @pkg_cache
+
+      @b.on 'package', (pkg) =>
+        @pkg_cache[path.join(pkg.__dirname, 'package.json')] = pkg
 
       @b.transform(t) for t in opts.transforms
       if opts.minify then @b.transform(uglifyify, { global: true })
@@ -64,16 +63,17 @@ module.exports = (opts) ->
     ###
 
     setup: ->
-      deferred = W.defer()
+      W.promise (resolve, reject) =>
+        @b.pipeline.get('deps').push through.obj (row, enc, next) =>
+          file = if row.expose then b._expose[row.id] else row.file
 
-      @b.pipeline.get('deps').push through.obj(
-        (row, enc, next) => @deps = @deps.concat(row.file); next()
-        () -> return deferred.resolve()
-      )
+          @cache[file] =
+            source: row.source
+            deps: _.extend({}, row.deps)
 
-      @b.bundle()
+          next(); resolve()
 
-      return deferred.promise
+        @b.bundle()
 
     ###*
      * If the file was passed directly into browserify or it is a dependency
@@ -84,7 +84,7 @@ module.exports = (opts) ->
     fs: ->
       extract: true
       detect: (f) =>
-        _.contains(@files, f.path) or _.contains(@deps, f.path)
+        _.contains(@files, f.path) or _.contains(Object.keys(@cache), f.path)
 
     ###*
      * Zero out the contents so nothing is compiled and don't write the file.
@@ -92,7 +92,7 @@ module.exports = (opts) ->
     ###
 
     compile_hooks: ->
-      before_file: (ctx) -> ctx.content = ''
+      before_file: (ctx) => ctx.content = ''
       write: -> false
 
     ###*
@@ -108,7 +108,12 @@ module.exports = (opts) ->
 
         out_path = path.join(@roots.config.output_path(), opts.out)
 
+        changed = ctx.roots.file_changed
+        if changed then invalidate.call(@, changed)
+
+        console.time('bundle')
         stream = @b.bundle()
+
         if opts.sourceMap
           map_path = out_path.replace(path.extname(out_path),'') + '.js.map'
 
@@ -126,6 +131,20 @@ module.exports = (opts) ->
         stream.pipe(writer)
         stream.on('error', deferred.reject)
         writer.on('error', deferred.reject)
-        writer.on('finish', deferred.resolve)
+        writer.on('finish', -> console.timeEnd('bundle'); deferred.resolve())
 
         return deferred.promise
+
+    ###*
+     * Given a file, invalidates this file and its dependants in the cache.
+     *
+     * @private
+     * @param  {String} file - filename
+    ###
+
+    invalidate = (file) ->
+      delete @cache[file]
+      delete @pkg_cache[file]
+
+      @changing_deps[file] = true
+      @b.emit('update', Object.keys(@changing_deps))
