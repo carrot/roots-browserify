@@ -92,7 +92,7 @@ module.exports = (opts) ->
     ###
 
     compile_hooks: ->
-      before_file: (ctx) => ctx.content = ''
+      before_file: (ctx) -> ctx.content = ''
       write: -> false
 
     ###*
@@ -111,7 +111,6 @@ module.exports = (opts) ->
         changed = ctx.roots.file_changed
         if changed then invalidate.call(@, changed)
 
-        console.time('bundle')
         stream = @b.bundle()
 
         if opts.sourceMap
@@ -131,7 +130,7 @@ module.exports = (opts) ->
         stream.pipe(writer)
         stream.on('error', deferred.reject)
         writer.on('error', deferred.reject)
-        writer.on('finish', -> console.timeEnd('bundle'); deferred.resolve())
+        writer.on('finish', deferred.resolve)
 
         return deferred.promise
 
