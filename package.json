@@ -10,15 +10,15 @@
     }
   ],
   "dependencies": {
-    "browserify": "8.x",
-    "coffee-script": "1.8.x",
+    "browserify": "11.x",
+    "coffee-script": "1.10.x",
     "coffeeify": "1.x",
-    "exorcist": "0.1.6",
-    "lodash": "2.x",
-    "mold-source-map": "0.3.0",
+    "exorcist": "0.4.x",
+    "lodash": "3.x",
+    "mold-source-map": "0.4.x",
     "roots-util": "0.1.x",
-    "through2": "1.x",
-    "uglifyify": "2.x",
+    "through2": "2.x",
+    "uglifyify": "3.x",
     "when": "3.x"
   },
   "devDependencies": {
