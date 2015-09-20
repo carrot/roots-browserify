@@ -184,3 +184,11 @@ describe 'cacheing in watch mode', ->
     , 3000
 
   it 'invalidates the cache when a file changes'
+
+describe 'path-prefix', ->
+
+  before (done) -> compile_fixture.call(@, 'path-prefix', -> done())
+
+  it 'should include the build.js', ->
+    out = path.join(@public, 'index.html')
+    h.file.contains(out, "<script src='../build.js'></script>").should.be.ok
