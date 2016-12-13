@@ -24,6 +24,36 @@ Roots browserify is an alternate javascript pipeline that uses commonjs and [bro
 
 This extension very directly uses browserify's javascript API under the hood. For basic usage, pass either a string with a file path or an array of file path strings as entry points for browserify, and an output path where all the concatenated scripts should be written, as shown in the example above.
 
+##### Injecting script into views
+When you use this extension, it wille expose a function called `browserify` to all your view files. When you call this function, the extension will drop in one script tag pointing to your script.
+
+The `browserify` function accepts one optional argument, which is a path to prefix any injected scripts with. So for example if you wanted to have the script load from the root of the site, you could pass in `/`. By default it would be the relative path `js/build.js`, but calling with `/` would make it `/js/build.js`.
+
+Here's an example of using the `browserify` function. This example uses [jade](http://jade-lang.com/) but this will also work with any other templating lagnuage.
+
+```jade
+//- index.jade
+p here's my great website
+!= browserify()
+```
+
+Now let's take a look at some sample output. With this configuration:
+
+```coffee
+# app.coffee
+browserify = require 'roots-browserify'
+
+module.exports =
+  extensions: [browserify(files: 'assets/js/main.coffee', out: 'js/build.js')]
+```
+
+You would see this output.
+```html
+<!-- pulic/index.html -->
+<p>here's my great website</p>
+<script src="js/build.js"></script>
+```
+
 ### Options
 
 ##### files

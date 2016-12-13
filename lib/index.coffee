@@ -52,8 +52,15 @@ module.exports = (opts) ->
       @b.on 'package', (pkg) =>
         @pkg_cache[path.join(pkg.__dirname, 'package.json')] = pkg
 
+      @roots.config.locals ?= {}
+      @roots.config.locals.browserify = (prefix = '') ->
+        "<script src='#{prefix}#{opts.out}'></script>\n"
+
+
       @b.transform(t) for t in opts.transforms
       if opts.minify then @b.transform(uglifyify, { global: true })
+
+
 
     ###*
      * Gets the dependency graph of required files so we can ignore them
