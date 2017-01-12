@@ -44,7 +44,7 @@ module.exports = (opts) ->
 
       @b = browserify
         entries: @files
-        extensions: ['.js', '.json', '.coffee']
+        extensions: opts.opts.extensions
         debug: opts.sourceMap
         cache: @cache
         packageCache: @pkg_cache
