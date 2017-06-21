@@ -31,7 +31,7 @@
     "mocha-lcov-reporter": "0.0.1",
     "rimraf": "2.x",
     "roots": "3.x",
-    "should": "4.x"
+    "should": "11.x"
   },
   "engines": {
     "node": ">=0.10.0"
