@@ -18,7 +18,7 @@
     "mold-source-map": "0.4.x",
     "roots-util": "0.1.x",
     "through2": "2.x",
-    "uglifyify": "3.x",
+    "uglifyify": "4.x",
     "when": "3.x"
   },
   "devDependencies": {
