@@ -26,9 +26,8 @@
     "coffeelint": "1.x",
     "coveralls": "2.x",
     "glob": "4.x",
-    "istanbul": "0.3.x",
     "mocha": "2.x",
-    "mocha-lcov-reporter": "0.0.1",
+    "nyc": "11.x",
     "rimraf": "2.x",
     "roots": "3.x",
     "should": "4.x"
@@ -48,9 +47,9 @@
     "url": "https://github.com/carrot/roots-browserify.git"
   },
   "scripts": {
-    "coverage": "make build; istanbul cover _mocha --report html -- -R spec && open coverage/index.html && make unbuild",
-    "coveralls": "make build; istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage; make unbuild",
-    "lint": "find lib/ -name '*.coffee' | xargs coffeelint",
+    "coverage": "make build; nyc _mocha -R min; make unbuild",
+    "coveralls": "make build; nyc _mocha -R min && nyc report -r lcov && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage; make unbuild",
+    "lint": "coffeelint lib",
     "test": "npm run lint && mocha"
   }
 }
