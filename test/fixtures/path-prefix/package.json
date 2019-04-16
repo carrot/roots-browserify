@@ -1,7 +1,0 @@
-{
-  "name": "test",
-  "dependencies": {
-    "coffee-script": "^1.10.0",
-    "jade": "^1.11.0"
-  }
-}
